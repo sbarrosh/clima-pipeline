@@ -25,27 +25,31 @@ Open Meteo API → Airflow DAG → Python/Pandas → PostgreSQL
 
 ### Pasos
 
-
-## 1. Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/clima-pipeline.git
+# 1. Clonar el repositorio
+git clone https://github.com/sbarrosh/clima-pipeline.git
 cd clima-pipeline
-```
-## 2. Inicializar Airflow
-```bash
+
+# 2. Inicializar Airflow
 docker-compose run --rm airflow-init
-```
-```bash
-## 3. Levantar el entorno
+
+# 3. Levantar el entorno
 docker-compose up -d
-```
-## 4. Abrir la UI de Airflow
-```bash
+
+# 4. Abrir la UI de Airflow
 # http://localhost:8080 — usuario: admin, contraseña: admin
+
+# 5. Activar y triggerear el DAG "clima_bogota_etl"
+` ``
 ```
-## 5. Activar y triggerear el DAG "clima_bogota_etl"
 
+Luego haz commit:
 
+```powershell
+git add README.md
+git commit -m "docs: corregir formato de pasos en README"
+git push
+```
 ## 📊 Datos que captura
 
 | Campo | Descripción |
