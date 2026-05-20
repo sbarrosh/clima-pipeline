@@ -1,4 +1,3 @@
-  
 x-airflow-common: &airflow-common
   image: apache/airflow:2.8.1
   environment:
@@ -6,7 +5,7 @@ x-airflow-common: &airflow-common
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/clima_db
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__FERNET_KEY: 'ZmDfcTF7_60GrrY167zsiPd67pEvs0aGOv2oasOM1Pg='
-    _PIP_ADDITIONAL_REQUIREMENTS: "requests pandas psycopg2-binary"  
+    _PIP_ADDITIONAL_REQUIREMENTS: "requests pandas psycopg2-binary"
   volumes:
     - ./dags:/opt/airflow/dags
     - ./scripts:/opt/airflow/scripts
@@ -22,6 +21,8 @@ services:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: clima_db
+      POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=md5"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -51,6 +52,19 @@ services:
     <<: *airflow-common
     command: scheduler
     restart: always
+
+  dbt:
+    image: python:3.11-slim
+    command: >
+      bash -c "apt-get update && apt-get install -y git && pip install dbt-postgres==1.10.0 && tail -f /dev/null"
+    volumes:
+      - ./dbt:/usr/app/dbt
+    working_dir: /usr/app/dbt
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - dbt
 
 volumes:
   postgres_data:
